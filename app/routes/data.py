@@ -57,12 +57,13 @@ async def _fetch_records(
 
     meta = DATASETS[dataset_id]
     filters = _parse_filters(dict(request.query_params))
+    effective_fields = fields or meta.get("default_fields")
 
     params = {
         "limit": limit,
         "offset": offset,
         "sort": sort,
-        "fields": fields,
+        "fields": effective_fields,
         "filters": filters,
     }
 
@@ -82,7 +83,7 @@ async def _fetch_records(
         limit=limit,
         offset=offset,
         sort=sort,
-        fields=fields,
+        fields=effective_fields,
         filters=filters,
     )
 
@@ -122,13 +123,14 @@ async def _fetch_records_csv(
 
     meta = DATASETS[dataset_id]
     filters = _parse_filters(dict(request.query_params))
+    effective_fields = fields or meta.get("default_fields")
 
     result = await directus.fetch_items(
         collection=dataset_id,
         limit=limit,
         offset=offset,
         sort=sort,
-        fields=fields,
+        fields=effective_fields,
         filters=filters,
     )
 
@@ -190,12 +192,20 @@ for _dataset_id, _meta in DATASETS.items():
     _examples_doc = "\n".join(
         f"- `{ex}`" for ex in _meta.get("example_queries", [])
     )
+    _default_fields_doc = (
+        f"### Default fields\n"
+        f"By default, only these fields are returned: `{_meta['default_fields']}`. "
+        f"Use `fields` to request other fields (e.g. large geometry columns) explicitly.\n\n"
+        if _meta.get("default_fields")
+        else ""
+    )
     _description = (
         f"{_meta['description']}\n\n"
         f"**Source:** {_meta['source']}\n\n"
         f"**License:** {_meta['license']}\n\n"
         f"**Update frequency:** {_meta['update_frequency']}\n\n"
         f"### Fields\n{_fields_doc}\n\n"
+        f"{_default_fields_doc}"
         f"### Example queries\n{_examples_doc}\n\n"
         f"### Filtering\n"
         f"Use `filter[field][operator]=value` query parameters. "

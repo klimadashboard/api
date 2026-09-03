@@ -91,6 +91,82 @@ DATASETS = {
             "sort=category — sort alphabetically by transport mode",
         ],
     },
+    "regions": {
+        "title": "Regions",
+        "description": (
+            "Reference table of geographic regions (countries, states, districts, "
+            "municipalities, and other administrative layers) used to look up names, "
+            "codes, hierarchy, and location for the `region` UUID referenced by other "
+            "datasets. Geometry outlines are large GeoJSON polygons and are excluded "
+            "from the response by default — request them explicitly with `fields`."
+        ),
+        "license": "CC-BY-4.0",
+        "source": "Klimadashboard",
+        "source_url": "",
+        "tags": ["regions", "geography", "reference", "austria", "germany"],
+        "update_frequency": "irregular",
+        "cache_ttl": 86400,
+        "fields": {
+            "id": "Region UUID (primary key), referenced as `region` in other datasets",
+            "code": "Region code (e.g. municipality key, ISO country code)",
+            "code_short": "Shortened region code",
+            "name": "Region name",
+            "name_short": "Shortened region name (if available)",
+            "slug": "URL-friendly identifier",
+            "country": "ISO 3166-1 alpha-2 country code (AT, DE, ...)",
+            "layer": "Administrative layer (country, state, district, municipality, group, union)",
+            "layer_label": "Human-readable label for the layer, in German (e.g. 'Gemeinde')",
+            "area": "Area in square kilometers",
+            "population": "Population count",
+            "postcodes": "Postal codes covered by this region (array, if available)",
+            "center": "Approximate center point as [longitude, latitude] (array of strings)",
+            "attributes": "Descriptive tags for the region (array, if available)",
+            "parents": "Parent regions in the hierarchy (array of {id, layer}, if available)",
+            "neighbours": "Neighbouring regions (if available)",
+            "visible": "Whether the region is published/visible",
+            "translations": "Related translation record IDs (array, if available)",
+            "outline": (
+                "Full-resolution region boundary as GeoJSON (Polygon/MultiPolygon). "
+                "Large payload — not included unless requested via `fields`."
+            ),
+            "outline_simple": (
+                "Simplified region boundary as GeoJSON, smaller than `outline` but "
+                "still large — not included unless requested via `fields`."
+            ),
+        },
+        "default_fields": (
+            "id,code,code_short,name,name_short,slug,country,layer,layer_label,"
+            "area,population,postcodes,center,attributes,parents,neighbours,"
+            "visible,translations"
+        ),
+        "example_record": {
+            "id": "2bc3faed-7cb4-492c-9097-145a0f8f1f01",
+            "code": "lt",
+            "code_short": "lt",
+            "name": "Lietuva",
+            "name_short": None,
+            "slug": "lietuva",
+            "country": "LT",
+            "layer": "country",
+            "layer_label": "Land",
+            "area": 0.0653,
+            "population": 2860000,
+            "postcodes": None,
+            "center": ["23.8813", "55.1694"],
+            "attributes": None,
+            "parents": None,
+            "neighbours": None,
+            "visible": True,
+            "translations": [33, 34],
+        },
+        "example_queries": [
+            "filter[layer][_eq]=municipality — only municipalities",
+            "filter[country][_eq]=AT — only Austrian regions",
+            "filter[name][_contains]=Wien — search by name",
+            "fields=id,name,outline — include the full boundary geometry",
+            "fields=id,name,outline_simple — include the simplified boundary geometry",
+        ],
+    },
     "mobility_modal_split_goals": {
         "title": "Mobility Modal Split Goals",
         "description": (
