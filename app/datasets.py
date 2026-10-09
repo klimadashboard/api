@@ -167,6 +167,52 @@ DATASETS = {
             "fields=id,name,outline_simple — include the simplified boundary geometry",
         ],
     },
+    "mobility_modal_split_goals": {
+        "title": "Mobility Modal Split Goals",
+        "description": (
+            "Policy targets for sustainable transport modal split in "
+            "Austrian and German cities and regions, including target years and "
+            "sustainable mobility percentage goals."
+        ),
+        "license": "CC-BY-4.0",
+        "source": "Various city climate mobility plans",
+        "source_url": None,
+        "tags": ["mobility", "transport", "targets", "policy", "austria"],
+        "update_frequency": "yearly",
+        "cache_ttl": 86400,
+        "fields": {
+            "id": "UUID primary key",
+            "region": "Region UUID (foreign key)",
+            "target_year": "Year by which the goal should be achieved",
+            "goal_type": "Type of goal (e.g. sustainable_total)",
+            "sustainable_target": "Target percentage for sustainable transport (string, e.g. '66.00')",
+            "category_targets": "Per-category breakdown (JSON object, if available)",
+            "goal_path": "Intermediate milestones / trajectory (JSON array, if available)",
+            "source": "Policy source document name",
+            "update": "Last update date (YYYY-MM-DD)",
+        },
+        "example_record": {
+            "id": "07d68325-e42e-4eb5-add2-50837f459efd",
+            "region": "",
+            "target_year": 2050,
+            "goal_type": "sustainable_total",
+            "sustainable_target": "90.00",
+            "category_targets": None,
+            "goal_path": None,
+            "source": "Klimamobilitaetsplan of City",
+            "update": "2026-01-01",
+        },
+        "example_queries": [
+            "filter[target_year][_lte]=2030 — goals with deadline by 2030",
+            "sort=target_year — sort by target year",
+        ],
+    },
+}
+
+
+# Not exposed via the catalog or /v0/data routes yet. Move an entry into
+# DATASETS to publish it.
+UNPUBLISHED_DATASETS = {
     "climate_indices": {
         "title": "Municipal Climate Indices",
         "description": (
@@ -221,46 +267,6 @@ DATASETS = {
             "filter[region][_eq]=<uuid> — all indices for one municipality",
             "filter[category][_eq]=heat_days&filter[year][_eq]=2022 — heat days for every municipality in 2022",
             "filter[year][_gte]=1991&filter[year][_lte]=2020 — a 30-year reference period",
-        ],
-    },
-    "mobility_modal_split_goals": {
-        "title": "Mobility Modal Split Goals",
-        "description": (
-            "Policy targets for sustainable transport modal split in "
-            "Austrian and German cities and regions, including target years and "
-            "sustainable mobility percentage goals."
-        ),
-        "license": "CC-BY-4.0",
-        "source": "Various city climate mobility plans",
-        "source_url": None,
-        "tags": ["mobility", "transport", "targets", "policy", "austria"],
-        "update_frequency": "yearly",
-        "cache_ttl": 86400,
-        "fields": {
-            "id": "UUID primary key",
-            "region": "Region UUID (foreign key)",
-            "target_year": "Year by which the goal should be achieved",
-            "goal_type": "Type of goal (e.g. sustainable_total)",
-            "sustainable_target": "Target percentage for sustainable transport (string, e.g. '66.00')",
-            "category_targets": "Per-category breakdown (JSON object, if available)",
-            "goal_path": "Intermediate milestones / trajectory (JSON array, if available)",
-            "source": "Policy source document name",
-            "update": "Last update date (YYYY-MM-DD)",
-        },
-        "example_record": {
-            "id": "07d68325-e42e-4eb5-add2-50837f459efd",
-            "region": "",
-            "target_year": 2050,
-            "goal_type": "sustainable_total",
-            "sustainable_target": "90.00",
-            "category_targets": None,
-            "goal_path": None,
-            "source": "Klimamobilitaetsplan of City",
-            "update": "2026-01-01",
-        },
-        "example_queries": [
-            "filter[target_year][_lte]=2030 — goals with deadline by 2030",
-            "sort=target_year — sort by target year",
         ],
     },
 }

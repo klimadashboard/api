@@ -11,7 +11,7 @@ from slowapi import Limiter
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 
-from app.routes import catalog, data, municipalities, regions
+from app.routes import catalog, data, regions
 from app.services import cache, directus
 
 load_dotenv()
@@ -128,7 +128,7 @@ from fastapi import APIRouter
 v0_router = APIRouter(prefix="/v0")
 v0_router.include_router(catalog.router)
 v0_router.include_router(data.router)
-v0_router.include_router(municipalities.router)
+# municipalities.router (climate indices) is not published yet
 v0_router.include_router(regions.router)
 app.include_router(v0_router)
 
