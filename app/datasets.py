@@ -167,6 +167,62 @@ DATASETS = {
             "fields=id,name,outline_simple — include the simplified boundary geometry",
         ],
     },
+    "climate_indices": {
+        "title": "Municipal Climate Indices",
+        "description": (
+            "Population-weighted annual climate indices (heat days, summer days, "
+            "tropical nights, frost days) for Austrian municipalities, derived from "
+            "GeoSphere Austria's SPARTACUS-v2 gridded daily temperature dataset "
+            "(1km resolution). Values are computed per SPARTACUS grid cell first "
+            "(threshold-day count, matching the ETCCDI convention), then aggregated "
+            "to each municipality as a population-weighted average across the grid "
+            "cells intersecting it, using the GHS-POP 2020 population grid (100m, "
+            "JRC/Copernicus). Grid cells whose elevation deviates by more than 300m "
+            "from the municipality's population-weighted mean elevation are excluded, to "
+            "avoid uninhabited high-alpine cells being mis-weighted due to "
+            "population-grid registration artifacts. This methodology was reviewed "
+            "with GeoSphere Austria's climate research team prior to publication. "
+            "For a simpler lookup by Gemeindeschlüssel, see "
+            "`/v0/municipalities/{code}/climate-indices`."
+        ),
+        "license": "CC-BY-4.0",
+        "source": "GeoSphere Austria (SPARTACUS-v2) / GHS-POP 2020 (JRC)",
+        "source_url": "https://data.hub.geosphere.at/dataset/klimaindizes_spartacus-v2-1y-1km",
+        "tags": ["climate", "temperature", "municipality", "austria", "heat-days"],
+        "update_frequency": "yearly",
+        "cache_ttl": 86400,
+        "fields": {
+            "id": "Auto-incrementing primary key",
+            "region": "Municipality region UUID (foreign key into `regions`)",
+            "year": "Year of observation",
+            "category": (
+                "Index type: `heat_days` (Tmax ≥ 30°C), `summer_days` "
+                "(Tmax ≥ 25°C), `tropical_nights` (Tmin ≥ 20°C), "
+                "or `frost_days` (Tmin < 0°C)"
+            ),
+            "value": "Population-weighted day count for the year (rounded)",
+            "value_min": "Lowest per-cell day count among grid cells used for this municipality (elevation spread indicator)",
+            "value_max": "Highest per-cell day count among grid cells used for this municipality (elevation spread indicator)",
+            "source": "Data source label",
+            "update": "Last update timestamp (ISO 8601)",
+        },
+        "example_record": {
+            "id": 1,
+            "region": "b7e1c2a0-1234-4abc-9def-000000000001",
+            "year": 2022,
+            "category": "heat_days",
+            "value": 33,
+            "value_min": 8,
+            "value_max": 61,
+            "source": "SPARTACUS-v2, population-weighted (GHS-POP 2020)",
+            "update": "2026-01-15T00:00:00",
+        },
+        "example_queries": [
+            "filter[region][_eq]=<uuid> — all indices for one municipality",
+            "filter[category][_eq]=heat_days&filter[year][_eq]=2022 — heat days for every municipality in 2022",
+            "filter[year][_gte]=1991&filter[year][_lte]=2020 — a 30-year reference period",
+        ],
+    },
     "mobility_modal_split_goals": {
         "title": "Mobility Modal Split Goals",
         "description": (

@@ -11,7 +11,7 @@ from slowapi import Limiter
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 
-from app.routes import catalog, data
+from app.routes import catalog, data, municipalities, regions
 from app.services import cache, directus
 
 load_dotenv()
@@ -67,6 +67,15 @@ Supported operators:
 **Example:** `/v0/data/emissions_data/records?filter[year][_gte]=2020&sort=-year&limit=10`
 
 **CSV export:** Append `.csv` to any records endpoint for a downloadable file.
+
+### Data for a single region
+
+The `/v0/regions/{code}/...` endpoints return ready-to-use figures for one \
+municipality, district or state in Germany or Austria — solar PV expansion \
+and installation types, battery storage, car density, land used by parked \
+cars, and heating systems. `code` is a Gemeindeschlüssel (e.g. `08115003` \
+for Böblingen), Gemeindekennziffer (e.g. `70101` for Innsbruck), district or \
+state code, or region UUID.
 """
 
 
@@ -119,6 +128,8 @@ from fastapi import APIRouter
 v0_router = APIRouter(prefix="/v0")
 v0_router.include_router(catalog.router)
 v0_router.include_router(data.router)
+v0_router.include_router(municipalities.router)
+v0_router.include_router(regions.router)
 app.include_router(v0_router)
 
 

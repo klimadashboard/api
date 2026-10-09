@@ -46,3 +46,19 @@ async def fetch_items(
     resp = await _client.get(f"/items/{collection}", params=params)
     resp.raise_for_status()
     return resp.json()
+
+
+async def search_items(collection: str, query: dict) -> dict:
+    """Query a collection via Directus' SEARCH method, which takes the query in
+    the request body. Use this when filters (e.g. long `_in` lists) would make
+    the URL too long for a GET request."""
+    resp = await _client.request("SEARCH", f"/items/{collection}", json={"query": query})
+    resp.raise_for_status()
+    return resp.json()
+
+
+async def fetch_endpoint(path: str, params: dict | None = None) -> dict:
+    """Call a custom Directus endpoint extension (e.g. `/get-storage-growth`)."""
+    resp = await _client.get(path, params=params)
+    resp.raise_for_status()
+    return resp.json()
